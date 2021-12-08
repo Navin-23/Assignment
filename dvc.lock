@@ -1,0 +1,67 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/load_data.py --config=params.yaml
+    deps:
+    - path: data_given/Surgical-deepnet.csv
+      md5: 16c9254a13d0f28aca297f62ac9547be
+      size: 1230003
+    - path: src/get_data.py
+      md5: c31dab9eadd6f3ddb1ae04f9a7f59cba
+      size: 667
+    - path: src/load_data.py
+      md5: f4f5e1ae77074f44510c3c46243b9b2a
+      size: 686
+    outs:
+    - path: data/raw/Surgical-deepnet.csv
+      md5: f5a79e52655afaef1ae3880019bc2874
+      size: 1262397
+  split_data:
+    cmd: python src/split_data.py --config=params.yaml
+    deps:
+    - path: data/raw/Surgical-deepnet.csv
+      md5: f5a79e52655afaef1ae3880019bc2874
+      size: 1262397
+    - path: src/split_data.py
+      md5: eaf830f100f84fa38d5869753b0f5bf8
+      size: 1100
+    outs:
+    - path: data/processed/test.csv
+      md5: cc5daab3c4b7713f8cbfe28ab9ecb86b
+      size: 315910
+    - path: data/processed/train.csv
+      md5: 477bb352ca1cef07afb50cfb19997f9e
+      size: 946792
+  train_and_evaluate:
+    cmd:
+    - python src/train_and_evaluate.py --config=params.yaml
+    - dvc plots show
+    deps:
+    - path: data/processed/test.csv
+      md5: cc5daab3c4b7713f8cbfe28ab9ecb86b
+      size: 315910
+    - path: data/processed/train.csv
+      md5: 477bb352ca1cef07afb50cfb19997f9e
+      size: 946792
+    - path: src/numpyencoder.py
+      md5: 0ce35639d3fd131b6eb762dc53908d4a
+      size: 996
+    - path: src/train_and_evaluate.py
+      md5: 8565dd3e469b47f12b77a250881af3ce
+      size: 8377
+    outs:
+    - path: cm.csv
+      md5: ef4ec31047b6b23c626ea0c1d8a233b4
+      size: 18319
+    - path: report/prc.json
+      md5: 6b56f1b0b9cf9c0dc3faf3ef3be9d25e
+      size: 291
+    - path: report/roc.json
+      md5: e137a4f99f614699b06ee82f3f1753b8
+      size: 357
+    - path: report/scores.json
+      md5: e4bafbcd220d8a338e898f4442e9ba66
+      size: 162
+    - path: saved_models/model.joblib
+      md5: 06c233100a9fd9b3516ed87d40438d35
+      size: 1005
