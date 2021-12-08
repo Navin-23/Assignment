@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, plot_roc_curve,accuracy_score
 from sklearn.metrics import average_precision_score
 from numpyencoder import NumpyEncoder
+from sklearn.tree import DecisionTreeClassifier
 from get_data import read_params
 import matplotlib.pyplot as plt
 import argparse
@@ -35,37 +36,8 @@ def train_and_evaluate(config_path):
     train_x = train.drop(target, axis=1)
     test_x = test.drop(target, axis=1)
     
-
-    # Build logistic regression model
-    #model = LogisticRegression(C=1.0, class_weight='balanced', dual=False,fit_intercept=True, intercept_scaling=1,l1_ratio=None, max_iter=100,multi_class='auto', n_jobs=None,penalty='l2', random_state=None,solver='lbfgs', tol=0.0001, verbose=0,warm_start=False).fit(train_x, train_y)
-    #model=RandomForestClassifier(bootstrap=True, ccp_alpha=0.0,
-    #                                          class_weight={0: 0.1, 1: 0.9},
-    #                                         criterion='gini', max_depth=None,
-    #                                        max_features='auto',
-    #                                         max_leaf_nodes=None,
-    #                                          max_samples=None,
-    #                                          min_impurity_decrease=0.0,
-    #                                          min_impurity_split=None,
-    #                                          min_samples_leaf=1,
-    #                                          min_samples_split=2,
-    #                                          min_weight_fraction_leaf=0.0,
-    #                                          n_estimators=100, n_jobs=-1,
-    #                                          oob_score=False,
-    #                                          random_state=None, verbose=0,
-    #                                          warm_start=False).fit(train_x, train_y)
-    model=LogisticRegression(C=1.0,class_weight={0: 0.1,1: 0.9},dual=False,
-                                                           fit_intercept=True,
-                                                           intercept_scaling=1,
-                                                           l1_ratio=None,
-                                                           max_iter=100,
-                                                           multi_class='auto',
-                                                           n_jobs=None,
-                                                           penalty='l2',
-                                                           random_state=None,
-                                                           solver='lbfgs',
-                                                           tol=0.0001,
-                                                           verbose=0,
-                                                           warm_start=False).fit(train_x, train_y)
+ 
+    model=DecisionTreeClassifier().fit(train_x, train_y)
     # Report training set score
     train_score = model.score(train_x, train_y) * 100
     print(train_score)
